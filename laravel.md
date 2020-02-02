@@ -44,3 +44,24 @@ echo optional($user)->name.' - '.optional($user)->blahblah.' - '.optional($no_us
 // option returns null if object or key/column of object is not found
 
 ```
+## Laravel export CSV
+```
+$headers = [
+   'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+   'Content-type' => 'application/vnd.ms-excel',
+   'Content-Disposition' => 'attachment; filename=file_name.xlsx',
+   'Expires' => '0',
+   'Pragma' => 'public'
+];
+$list = TableModel::all()->toArray();
+# add headers for each column in the CSV download
+array_unshift($list, array_keys($list[0]));
+$callback = function() use ($list) {
+   $FH = fopen('php://output', 'w');
+     foreach ($list as $row) {
+     fputcsv($FH, $row);
+   }
+   fclose($FH);
+};
+return Response::stream($callback, 200, $headers);
+```
