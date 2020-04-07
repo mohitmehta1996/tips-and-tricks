@@ -1,0 +1,36 @@
+<?php
+
+$original = "this is my original paragraph. Please do not touch this.";
+echo "Original:- $original <hr>";
+
+
+
+$allowed_chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+$array = str_split($original);
+$newString = "";
+foreach ($array as $key => $char) {
+	if (strpos($allowed_chars, $char) > 0) {
+		$char = $allowed_chars[rand(0,strlen($allowed_chars)-1)].$char.$allowed_chars[rand(0,strlen($allowed_chars)-1)];
+	}
+	$newString .= $char;
+}
+echo "newString:- $newString <hr>";
+
+
+
+$re_original = "";
+$array = str_split($newString);
+
+while (strlen($newString) > 0) {
+	$first_letter = substr($newString,0,1);
+	if (strpos($allowed_chars, $first_letter) !== false) {
+		$pair = substr($newString,0,3);
+		$re_original .= $pair[1];
+		$newString = substr($newString, strpos($newString, $pair) + 3); 
+	}else{
+		$re_original .= $first_letter;
+		$newString = substr($newString, strpos($newString, $first_letter) + 1);
+	}
+}
+
+echo "Original back:- $re_original <hr>";
